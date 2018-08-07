@@ -6,7 +6,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"."
-	"./queries"
 	"gopkg.in/mgo.v2"
 )
 
@@ -25,7 +24,7 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(queries.EQ("name", "Snake Eyes")))).To(BeNil())
+		Expect(repository.Find(r, &obj, repository.WithCriteria(repository.EQ("name", "Snake Eyes")))).To(BeNil())
 	})
 
 	It("should not find an object by name", func() {
@@ -38,7 +37,7 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(queries.EQ("name", "Snake Eyes 1")))).To(Equal(mgo.ErrNotFound))
+		Expect(repository.Find(r, &obj, repository.WithCriteria(repository.EQ("name", "Snake Eyes 1")))).To(Equal(mgo.ErrNotFound))
 	})
 
 	It("should combine criteria to find an object", func() {
@@ -51,10 +50,10 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(
-			queries.And(
-				queries.EQ("name", "Snake Eyes"),
-				queries.GT("age", 30),
+		Expect(repository.Find(r, &obj, repository.WithCriteria(
+			repository.And(
+				repository.EQ("name", "Snake Eyes"),
+				repository.GT("age", 30),
 			),
 		))).To(BeNil())
 		Expect(obj.Name).To(Equal("Snake Eyes"))
@@ -71,8 +70,8 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(
-			queries.GT("age", 33),
+		Expect(repository.Find(r, &obj, repository.WithCriteria(
+			repository.GT("age", 33),
 		))).To(Equal(mgo.ErrNotFound))
 	})
 
@@ -86,10 +85,10 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(
-			queries.And(
-				queries.EQ("name", "Snake Eyes"),
-				queries.GTE("age", 33),
+		Expect(repository.Find(r, &obj, repository.WithCriteria(
+			repository.And(
+				repository.EQ("name", "Snake Eyes"),
+				repository.GTE("age", 33),
 			),
 		))).To(BeNil())
 		Expect(obj.Name).To(Equal("Snake Eyes"))
@@ -106,8 +105,8 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(
-			queries.GTE("age", 34),
+		Expect(repository.Find(r, &obj, repository.WithCriteria(
+			repository.GTE("age", 34),
 		))).To(Equal(mgo.ErrNotFound))
 	})
 
@@ -121,8 +120,8 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(
-			queries.LTE("age", 33),
+		Expect(repository.Find(r, &obj, repository.WithCriteria(
+			repository.LTE("age", 33),
 		))).To(BeNil())
 		Expect(obj.Name).To(Equal("Snake Eyes"))
 		Expect(obj.Age).To(Equal(33))
@@ -138,8 +137,8 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(
-			queries.LTE("age", 32),
+		Expect(repository.Find(r, &obj, repository.WithCriteria(
+			repository.LTE("age", 32),
 		))).To(Equal(mgo.ErrNotFound))
 	})
 
@@ -153,8 +152,8 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(
-			queries.Exists("age"),
+		Expect(repository.Find(r, &obj, repository.WithCriteria(
+			repository.Exists("age"),
 		))).To(BeNil())
 		Expect(obj.Name).To(Equal("Snake Eyes"))
 		Expect(obj.Age).To(Equal(33))
@@ -170,8 +169,8 @@ var _ = Describe("Find", func() {
 		err := repository.Create(r, tobj)
 		Expect(err).To(BeNil())
 		var obj testRepObject
-		Expect(repository.Find(r, &obj, queries.WithCriteria(
-			queries.NotExists("age"),
+		Expect(repository.Find(r, &obj, repository.WithCriteria(
+			repository.NotExists("age"),
 		))).To(Equal(mgo.ErrNotFound))
 	})
 })

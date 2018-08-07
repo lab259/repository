@@ -6,7 +6,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"."
-	"./queries"
 	"gopkg.in/mgo.v2"
 )
 
@@ -35,8 +34,8 @@ var _ = Describe("FindByID", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		objid1, _, _ := insertObjects(r)
 		var obj testRepObject
-		Expect(repository.FindByID(r, objid1, &obj, queries.WithCriteria(
-			queries.GT("age", 30),
+		Expect(repository.FindByID(r, objid1, &obj, repository.WithCriteria(
+			repository.GT("age", 30),
 		))).To(BeNil())
 		Expect(obj.Name).To(Equal("Snake Eyes"))
 		Expect(obj.Age).To(Equal(33))
@@ -46,7 +45,7 @@ var _ = Describe("FindByID", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		objid1, _, _ := insertObjects(r)
 		var obj testRepObject
-		Expect(repository.FindByID(r, objid1, &obj, queries.EQ("age", 33))).To(BeNil())
+		Expect(repository.FindByID(r, objid1, &obj, repository.EQ("age", 33))).To(BeNil())
 		Expect(obj.Name).To(Equal("Snake Eyes"))
 		Expect(obj.Age).To(Equal(33))
 	})
@@ -55,8 +54,8 @@ var _ = Describe("FindByID", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		objid1, _, _ := insertObjects(r)
 		var obj testRepObject
-		Expect(repository.FindByID(r, objid1, &obj, queries.WithCriteria(
-			queries.LT("age", 30),
+		Expect(repository.FindByID(r, objid1, &obj, repository.WithCriteria(
+			repository.LT("age", 30),
 		))).To(Equal(mgo.ErrNotFound))
 	})
 
@@ -64,7 +63,7 @@ var _ = Describe("FindByID", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		objid1, _, _ := insertObjects(r)
 		var obj testRepObject
-		repository.FindByID(r, objid1, &obj, queries.WithCriteria(
+		repository.FindByID(r, objid1, &obj, repository.WithCriteria(
 			&erroneousCondition{},
 		))
 	})
@@ -98,7 +97,7 @@ var _ = Describe("FindByID", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		objid1, _, _ := insertObjects(r)
 		var obj testRepObject
-		err := repository.FindByID(r, objid1, &obj, queries.WithCriteria(
+		err := repository.FindByID(r, objid1, &obj, repository.WithCriteria(
 			&erroneousCondition{},
 		))
 		Expect(err).NotTo(BeNil())

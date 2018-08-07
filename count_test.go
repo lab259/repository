@@ -4,7 +4,6 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"."
-	"./queries"
 )
 
 var _ = Describe("Count", func() {
@@ -23,7 +22,7 @@ var _ = Describe("Count", func() {
 	It("should count objects with some criteria", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
-		count, err := repository.Count(r, queries.WithCriteria(queries.LT("age", 30)))
+		count, err := repository.Count(r, repository.WithCriteria(repository.LT("age", 30)))
 		Expect(err).To(BeNil())
 		Expect(count).To(Equal(2))
 	})
@@ -31,7 +30,7 @@ var _ = Describe("Count", func() {
 	It("should find all objects with sorting", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
-		count, err := repository.Count(r, queries.WithCriteria(queries.LT("age", 30)), queries.Sort("name"))
+		count, err := repository.Count(r, repository.WithCriteria(repository.LT("age", 30)), repository.WithSort("name"))
 		Expect(err).To(BeNil())
 		Expect(count).To(Equal(2))
 	})

@@ -3,8 +3,7 @@ package repository_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-		"."
-	"./queries"
+	"."
 )
 
 var _ = Describe("CountAndFind", func() {
@@ -32,7 +31,7 @@ var _ = Describe("CountAndFind", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		count, err := repository.CountAndFindAll(r, &objs, queries.WithCriteria(queries.LT("age", 30)))
+		count, err := repository.CountAndFindAll(r, &objs, repository.WithCriteria(repository.LT("age", 30)))
 		Expect(err).To(BeNil())
 		Expect(count).To(Equal(2))
 		Expect(objs).To(HaveLen(2))
@@ -46,7 +45,7 @@ var _ = Describe("CountAndFind", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		count, err := repository.CountAndFindAll(r, &objs, queries.WithCriteria(queries.LT("age", 30)), queries.Sort("name"))
+		count, err := repository.CountAndFindAll(r, &objs, repository.WithCriteria(repository.LT("age", 30)), repository.WithSort("name"))
 		Expect(err).To(BeNil())
 		Expect(count).To(Equal(2))
 		Expect(objs).To(HaveLen(2))
@@ -60,7 +59,7 @@ var _ = Describe("CountAndFind", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		count, err := repository.CountAndFindAll(r, &objs, queries.WithPage(1, 2))
+		count, err := repository.CountAndFindAll(r, &objs, repository.WithPage(1, 2))
 		Expect(err).To(BeNil())
 		Expect(count).To(Equal(3))
 		Expect(objs).To(HaveLen(1))
@@ -72,7 +71,7 @@ var _ = Describe("CountAndFind", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		count, err := repository.CountAndFindAll(r, &objs, queries.Skip(1))
+		count, err := repository.CountAndFindAll(r, &objs, repository.Skip(1))
 		Expect(err).To(BeNil())
 		Expect(count).To(Equal(3))
 		Expect(objs).To(HaveLen(2))
@@ -86,7 +85,7 @@ var _ = Describe("CountAndFind", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		count, err := repository.CountAndFindAll(r, &objs, queries.Limit(1), queries.Sort("name"))
+		count, err := repository.CountAndFindAll(r, &objs, repository.Limit(1), repository.WithSort("name"))
 		Expect(err).To(BeNil())
 		Expect(count).To(Equal(3))
 		Expect(objs).To(HaveLen(1))

@@ -4,7 +4,6 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	"."
-	"./queries"
 )
 
 var _ = Describe("BinaryOperator", func() {
@@ -16,9 +15,9 @@ var _ = Describe("BinaryOperator", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.And(
-			queries.EQ("name", "Snake Eyes"),
-			queries.EQ("age", 33),
+		Expect(repository.FindAll(r, &objs, repository.And(
+			repository.EQ("name", "Snake Eyes"),
+			repository.EQ("age", 33),
 		))).To(BeNil())
 		Expect(objs).To(HaveLen(1))
 		Expect(objs[0].Name).To(Equal("Snake Eyes"))
@@ -28,9 +27,9 @@ var _ = Describe("BinaryOperator", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.Or(
-			queries.EQ("name", "Snake Eyes"),
-			queries.EQ("name", "Duke"),
+		Expect(repository.FindAll(r, &objs, repository.Or(
+			repository.EQ("name", "Snake Eyes"),
+			repository.EQ("name", "Duke"),
 		))).To(BeNil())
 		Expect(objs).To(HaveLen(2))
 		Expect(objs[0].Name).To(Equal("Snake Eyes"))
@@ -41,11 +40,11 @@ var _ = Describe("BinaryOperator", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.Or(
-			queries.EQ("age", 33),
-			queries.And(
-				queries.LT("strength", 7),
-				queries.GT("agility", 8),
+		Expect(repository.FindAll(r, &objs, repository.Or(
+			repository.EQ("age", 33),
+			repository.And(
+				repository.LT("strength", 7),
+				repository.GT("agility", 8),
 			),
 		))).To(BeNil())
 		Expect(objs).To(HaveLen(2))
@@ -57,10 +56,10 @@ var _ = Describe("BinaryOperator", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.And(
-			queries.WithCriteria(
-				queries.LT("strength", 7),
-				queries.GT("agility", 8),
+		Expect(repository.FindAll(r, &objs, repository.And(
+			repository.WithCriteria(
+				repository.LT("strength", 7),
+				repository.GT("agility", 8),
 			),
 		))).To(BeNil())
 		Expect(objs).To(HaveLen(1))
@@ -71,8 +70,8 @@ var _ = Describe("BinaryOperator", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		err := repository.FindAll(r, &objs, queries.And(
-			queries.WithCriteria(
+		err := repository.FindAll(r, &objs, repository.And(
+			repository.WithCriteria(
 				&erroneousCondition{},
 			),
 		))

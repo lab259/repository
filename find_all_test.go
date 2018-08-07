@@ -6,7 +6,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"."
-	"./queries"
 )
 
 var _ = Describe("FindAll", func() {
@@ -32,7 +31,7 @@ var _ = Describe("FindAll", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.WithCriteria(queries.LT("age", 30)))).To(BeNil())
+		Expect(repository.FindAll(r, &objs, repository.WithCriteria(repository.LT("age", 30)))).To(BeNil())
 		Expect(objs).To(HaveLen(2))
 		Expect(objs[0].Name).To(Equal("Scarlett"))
 		Expect(objs[0].Age).To(Equal(22))
@@ -44,7 +43,7 @@ var _ = Describe("FindAll", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.WithCriteria(queries.LT("age", 30)), queries.Sort("name"))).To(BeNil())
+		Expect(repository.FindAll(r, &objs, repository.WithCriteria(repository.LT("age", 30)), repository.WithSort("name"))).To(BeNil())
 		Expect(objs).To(HaveLen(2))
 		Expect(objs[0].Name).To(Equal("Duke"))
 		Expect(objs[0].Age).To(Equal(22))
@@ -56,7 +55,7 @@ var _ = Describe("FindAll", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.WithPage(1, 2))).To(BeNil())
+		Expect(repository.FindAll(r, &objs, repository.WithPage(1, 2))).To(BeNil())
 		Expect(objs).To(HaveLen(1))
 		Expect(objs[0].Name).To(Equal("Duke"))
 		Expect(objs[0].Age).To(Equal(22))
@@ -66,7 +65,7 @@ var _ = Describe("FindAll", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.Skip(1))).To(BeNil())
+		Expect(repository.FindAll(r, &objs, repository.Skip(1))).To(BeNil())
 		Expect(objs).To(HaveLen(2))
 		Expect(objs[0].Name).To(Equal("Scarlett"))
 		Expect(objs[0].Age).To(Equal(22))
@@ -78,7 +77,7 @@ var _ = Describe("FindAll", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		Expect(repository.FindAll(r, &objs, queries.Limit(1), queries.Sort("name"))).To(BeNil())
+		Expect(repository.FindAll(r, &objs, repository.Limit(1), repository.WithSort("name"))).To(BeNil())
 		Expect(objs).To(HaveLen(1))
 		Expect(objs[0].Name).To(Equal("Duke"))
 		Expect(objs[0].Age).To(Equal(22))
@@ -91,9 +90,9 @@ var _ = Describe("FindAll", func() {
 		Expect(repository.FindAll(
 			r,
 			&objs,
-			queries.Limit(1),
-			queries.Sort("name"),
-			queries.LT("age", 30),
+			repository.Limit(1),
+			repository.WithSort("name"),
+			repository.LT("age", 30),
 		)).To(BeNil())
 		Expect(objs).To(HaveLen(1))
 		Expect(objs[0].Name).To(Equal("Duke"))
@@ -152,8 +151,8 @@ var _ = Describe("FindAll", func() {
 		Expect(repository.FindAll(
 			r,
 			&objs,
-			queries.Limit(2),
-			queries.Sort("name"),
+			repository.Limit(2),
+			repository.WithSort("name"),
 		)).To(BeNil())
 		Expect(objs).To(HaveLen(2))
 		Expect(objs[0].Name).To(Equal("Duke"))
@@ -202,7 +201,7 @@ var _ = Describe("FindAll", func() {
 			Expect(repository.FindAll(
 				r,
 				&objs,
-				queries.WithCriteria(
+				repository.WithCriteria(
 					bson.DocElem{Name: "_id", Value: bson.D{bson.DocElem{Name: "$in", Value: []interface{}{objid1}}}},
 				),
 			)).To(BeNil())
@@ -217,10 +216,10 @@ var _ = Describe("FindAll", func() {
 			Expect(repository.FindAll(
 				r,
 				&objs,
-				queries.WithCriteria(
-					queries.And(
-						queries.LT("age", 35),
-						queries.GT("age", 30),
+				repository.WithCriteria(
+					repository.And(
+						repository.LT("age", 35),
+						repository.GT("age", 30),
 					),
 				),
 			)).To(BeNil())
@@ -235,10 +234,10 @@ var _ = Describe("FindAll", func() {
 			Expect(repository.FindAll(
 				r,
 				&objs,
-				queries.WithCriteria(
-					queries.And(
-						queries.LT("age", 35),
-						queries.GT("age", 30),
+				repository.WithCriteria(
+					repository.And(
+						repository.LT("age", 35),
+						repository.GT("age", 30),
 					),
 				),
 			)).To(BeNil())
@@ -253,7 +252,7 @@ var _ = Describe("FindAll", func() {
 			err := repository.FindAll(
 				r,
 				&objs,
-				queries.WithCriteria(bson.M{
+				repository.WithCriteria(bson.M{
 					"name": "Snake Eyes",
 				}),
 			)
@@ -268,7 +267,7 @@ var _ = Describe("FindAll", func() {
 			err := repository.FindAll(
 				r,
 				&objs,
-				queries.WithCriteria(
+				repository.WithCriteria(
 					&erroneousCondition{},
 				),
 			)

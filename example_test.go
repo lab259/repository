@@ -5,7 +5,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 
 	"."
-	"./queries"
 	"errors"
 	"gopkg.in/mgo.v2"
 )
@@ -49,7 +48,7 @@ func (rep *testRepWithDefaultCriteriaNoDefaultSorting) GetQueryRunner() reposito
 }
 
 func (rep *testRepWithDefaultCriteriaNoDefaultSorting) GetDefaultCriteria() interface{} {
-	return queries.LT("age", 30)
+	return repository.LT("age", 30)
 }
 
 func (rep *testRepWithDefaultCriteriaNoDefaultSorting) GetDefaultSorting() []string {
