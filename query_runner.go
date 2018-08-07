@@ -2,8 +2,6 @@ package repository
 
 import "gopkg.in/mgo.v2"
 
-type mgoDBRunner func(db *mgo.Database) error
-
 // QueryRunner provide a infrastructure for executing querys in different
 // contexts.
 //
@@ -16,5 +14,5 @@ type mgoDBRunner func(db *mgo.Database) error
 // `QueryRunner` implementation would make sure to take select the right
 // database before calling the handler.
 type QueryRunner interface {
-	RunWithDB(handler mgoDBRunner) error
+	RunWithDB(handler func(db *mgo.Database) error) error
 }
