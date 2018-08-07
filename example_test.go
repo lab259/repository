@@ -6,6 +6,8 @@ import (
 
 	"."
 	"./queries"
+	"errors"
+	"gopkg.in/mgo.v2"
 )
 
 type testRepObject struct {
@@ -98,4 +100,16 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 	})).To(BeNil())
 
 	return objid1, objid2, objid3
+}
+
+type erroneousCondition struct{}
+
+func (err *erroneousCondition) GetCondition() (bson.DocElem, error) {
+	return bson.DocElem{}, errors.New("forced error")
+}
+
+type erroneousQueryModifier struct{}
+
+func (err *erroneousQueryModifier) Apply(query *mgo.Query) (*mgo.Query, error) {
+	return nil, errors.New("forced error")
 }

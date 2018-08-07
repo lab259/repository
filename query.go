@@ -4,7 +4,7 @@ import (
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"fmt"
-		"reflect"
+	"reflect"
 )
 
 // Queryable objects will be treated as special objects during the query
@@ -82,19 +82,7 @@ func GetQueryCriteria(defaultCriteria interface{}, params ... interface{}) (bson
 	return ccc, nil
 }
 
-// Query builds the criteria, using `GetQueryCriteria`, and performs the
-// `mgo.Collection.Find` for building the `mgo.Query`.
-//
-// Then, this generated `mgo.Query` will passed for the params that are from the
-// `Queryable` type, applying its transformations (through `Queryable.Applying`).
-//
-// Finally, it will return
-func Query(r Repository, c *mgo.Collection, params ...interface{}) (*mgo.Query, error) {
-	conditions, err := GetQueryCriteria(r.GetDefaultCriteria(), params ...)
-	if err != nil {
-		return nil, err
-	}
-	query := c.Find(conditions)
+func ApplyQueryModifiers(r Repository, query *mgo.Query, params ... interface{}) (*mgo.Query, error) {
 	var sorting = r.GetDefaultSorting()
 	for _, param := range params {
 		switch v := param.(type) {
@@ -127,6 +115,46 @@ func Query(r Repository, c *mgo.Collection, params ...interface{}) (*mgo.Query, 
 		query = query.Sort(sorting...)
 	}
 	return query, nil
+}
+
+// Query builds the criteria, using `GetQueryCriteria`, and performs the
+// `mgo.Collection.Find` for building the `mgo.Query`.
+//
+// Then, the generated `mgo.Query` will be passed through each `QueryModifier`
+// passed as param.
+//
+// Finally, it will return the `mgo.Query` prepared for execution.
+func Query(r Repository, c *mgo.Collection, params ...interface{}) (*mgo.Query, error) {
+	conditions, err := GetQueryCriteria(r.GetDefaultCriteria(), params ...)
+	if err != nil {
+		return nil, err
+	}
+	query := c.Find(conditions)
+	query, err = ApplyQueryModifiers(r, query, params...)
+	if err != nil {
+		return nil, err
+	}
+	return query, nil
+}
+
+// CountAndQuery will use the same idea as `Query`. However, before applying the
+// modifications from `QueryModifier` it saves the count and returns it with the
+// reference of the `mgo.Query` obtained.
+func CountAndQuery(r Repository, c *mgo.Collection, params ...interface{}) (*mgo.Query, int, error) {
+	conditions, err := GetQueryCriteria(r.GetDefaultCriteria(), params ...)
+	if err != nil {
+		return nil, 0, err
+	}
+	query := c.Find(conditions)
+	count, err := query.Count()
+	if err != nil {
+		return nil, 0, err
+	}
+	query, err = ApplyQueryModifiers(r, query, params...)
+	if err != nil {
+		return nil, 0, err
+	}
+	return query, count, nil
 }
 
 func NewErrTypeNotSupported(v interface{}) error {

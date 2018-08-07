@@ -7,44 +7,9 @@ import (
 
 	"."
 	"./queries"
-	"errors"
-	"gopkg.in/mgo.v2"
 )
 
-type erroneousCondition struct{}
-
-func (err *erroneousCondition) GetCondition() (bson.DocElem, error) {
-	return bson.DocElem{}, errors.New("forced error")
-}
-
-type erroneousQueryModifier struct{}
-
-func (err *erroneousQueryModifier) Apply(query *mgo.Query) (*mgo.Query, error) {
-	return nil, errors.New("forced error")
-}
-
 var _ = Describe("FindAll", func() {
-	insertObjects := func(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.ObjectId) {
-		objid1, objid2, objid3 := bson.NewObjectId(), bson.NewObjectId(), bson.NewObjectId()
-		Expect(repository.Create(r, &testRepObject{
-			ID:   objid1,
-			Name: "Snake Eyes",
-			Age:  33,
-		})).To(BeNil())
-		Expect(repository.Create(r, &testRepObject{
-			ID:   objid2,
-			Name: "Scarlett",
-			Age:  22,
-		})).To(BeNil())
-		Expect(repository.Create(r, &testRepObject{
-			ID:   objid3,
-			Name: "Duke",
-			Age:  22,
-		})).To(BeNil())
-
-		return objid1, objid2, objid3
-	}
-
 	BeforeEach(func() {
 		Expect(clearSession()).To(BeNil())
 	})

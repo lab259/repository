@@ -11,29 +11,6 @@ import (
 )
 
 var _ = Describe("FindByID", func() {
-	insertObjects := func(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.ObjectId) {
-		objId1 := bson.NewObjectId()
-		objId2 := bson.NewObjectId()
-		objId3 := bson.NewObjectId()
-		Expect(repository.Create(r, &testRepObject{
-			ID:   objId1,
-			Name: "Snake Eyes",
-			Age:  33,
-		})).To(BeNil())
-		Expect(repository.Create(r, &testRepObject{
-			ID:   objId2,
-			Name: "Scarlett",
-			Age:  22,
-		})).To(BeNil())
-		Expect(repository.Create(r, &testRepObject{
-			ID:   objId3,
-			Name: "Duke",
-			Age:  22,
-		})).To(BeNil())
-
-		return objId1, objId2, objId3
-	}
-
 	BeforeEach(func() {
 		Expect(clearSession()).To(BeNil())
 	})
