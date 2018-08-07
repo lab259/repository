@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    docker:
+    - image: circleci/golang:1.9
+
+    - image: circleci/mongo:4.0.0
+
+    working_directory: /go/src/github.com/lab259/repository
+    steps:
+      - checkout
+
+      - run: sudo apt install mongodb-clients libssl-dev
+
+      - run:
+          name: Install dockerize
+          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
+          environment:
+            DOCKERIZE_VERSION: v0.3.0
+
+      - run:
+          name: Wait for MongoDB
+          command: dockerize -wait tcp://localhost:27017 -timeout 10s
+
+      - run: go get -u github.com/onsi/ginkgo/ginkgo
+      - run: make deps-ci
+      - run: make coverage-ci
+      - run: bash <(curl -s https://codecov.io/bash)
