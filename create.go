@@ -1,6 +1,6 @@
 package repository
 
-import "gopkg.in/mgo.v2"
+import "github.com/globalsign/mgo"
 
 func Create(r Repository, object interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {

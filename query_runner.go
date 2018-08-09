@@ -1,6 +1,6 @@
 package repository
 
-import "gopkg.in/mgo.v2"
+import "github.com/globalsign/mgo"
 
 // QueryRunner provide a infrastructure for executing querys in different
 // contexts.

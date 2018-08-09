@@ -1,12 +1,12 @@
 package repository_test
 
 import (
+	"github.com/globalsign/mgo/bson"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"gopkg.in/mgo.v2/bson"
 
 	"."
-	"gopkg.in/mgo.v2"
+	"github.com/globalsign/mgo"
 )
 
 var _ = Describe("FindByID", func() {

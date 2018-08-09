@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"gopkg.in/mgo.v2"
+	"github.com/globalsign/mgo"
 )
 
 type MgoServiceRunner interface {
@@ -21,7 +21,7 @@ func NewSimpleQueryRunner(service MgoServiceRunner, database string) *SimpleQuer
 }
 
 // RunWithDB runs
-func (runner *SimpleQueryRunner) RunWithDB(handler func (db *mgo.Database) error) error {
+func (runner *SimpleQueryRunner) RunWithDB(handler func(db *mgo.Database) error) error {
 	return runner.service.RunWithSession(func(session *mgo.Session) error {
 		return handler(session.DB(runner.database))
 	})

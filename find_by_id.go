@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"gopkg.in/mgo.v2"
+	"github.com/globalsign/mgo"
 )
 
 // FindByID finds a model based on its ID. If not model is found in the
@@ -11,7 +11,7 @@ import (
 // defaultCriteria.
 //
 // If no model is found, it returns an `mgo.ErrNotFound`.
-func FindByID(r Repository, id interface{}, dst interface{}, params ... interface{}) error {
+func FindByID(r Repository, id interface{}, dst interface{}, params ...interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
 		query, err := Query(r, db.C(r.GetCollectionName()), append([]interface{}{
 			&Criteria{

@@ -1,14 +1,15 @@
 package repository_test
 
 import (
+	"log"
+	"testing"
+
+	"."
+	"github.com/globalsign/mgo"
+	"github.com/jamillosantos/macchiato"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
-	"github.com/jamillosantos/macchiato"
-	"testing"
-	"log"
-	"gopkg.in/mgo.v2"
-	"."
-		)
+)
 
 type mgoService struct {
 }
@@ -59,28 +60,28 @@ func TestRepository(t *testing.T) {
 	defaultQueryRunner = repository.NewSimpleQueryRunner(&mgoService{}, "repository_test")
 
 	/*
-	type testRepObject struct {
-		ID   bson.ObjectId `bson:"_id,omitempty"`
-		Name string        `bson:"name,omitempty"`
-		Age  int           `bson:"age,omitempty"`
-	}
-	r := &testRepNoDefaultCriteriaNoDefaultSorting{}
-	tobj := &testRepObject{
-		ID:   bson.NewObjectId(),
-		Name: "Snake Eyes",
-		Age:  33,
-	}
-	err = repository.Create(r, tobj)
-	if err != nil {
-		t.FailNow()
-	}
-	var obj testRepObject
-	repository.Find(r, &obj, queries.WithCriteria(
-		queries.And(
-			queries.EQ("name", "Snake Eyes 1"),
-			queries.GT("age", 30),
-		),
-	))
+		type testRepObject struct {
+			ID   bson.ObjectId `bson:"_id,omitempty"`
+			Name string        `bson:"name,omitempty"`
+			Age  int           `bson:"age,omitempty"`
+		}
+		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
+		tobj := &testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Snake Eyes",
+			Age:  33,
+		}
+		err = repository.Create(r, tobj)
+		if err != nil {
+			t.FailNow()
+		}
+		var obj testRepObject
+		repository.Find(r, &obj, queries.WithCriteria(
+			queries.And(
+				queries.EQ("name", "Snake Eyes 1"),
+				queries.GT("age", 30),
+			),
+		))
 	*/
 	macchiato.RunSpecs(t, "Repository Test Suite")
 }

@@ -1,12 +1,13 @@
 package repository_test
 
 import (
+	"github.com/globalsign/mgo/bson"
 	. "github.com/onsi/gomega"
-	"gopkg.in/mgo.v2/bson"
+
+	"errors"
 
 	"."
-	"errors"
-	"gopkg.in/mgo.v2"
+	"github.com/globalsign/mgo"
 )
 
 type testRepObject struct {

@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"gopkg.in/mgo.v2"
+	"github.com/globalsign/mgo"
 )
 
 type OperatorSkipLimit struct {
