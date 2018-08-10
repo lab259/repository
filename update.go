@@ -14,3 +14,14 @@ func Update(r Repository, id interface{}, object interface{}) error {
 		})
 	})
 }
+
+// UpdateRaw does a complete update of a model.
+func UpdateRaw(r Repository, id interface{}, object interface{}) error {
+	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
+		return db.C(r.GetCollectionName()).Update(
+			bson.D{
+				bson.DocElem{"_id", id},
+			}, object,
+		)
+	})
+}
