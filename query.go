@@ -39,6 +39,10 @@ func genConditions(conditions bson.D, params ...interface{}) (bson.D, error) {
 			// Appends the condition directly to the result.
 			conditions = append(conditions, v)
 			break
+		case *bson.DocElem:
+			// Appends the condition directly to the result.
+			conditions = append(conditions, *v)
+			break
 		case BinaryOperator:
 			// If a `BinaryOperator` is passed.
 			// Get the conditions
