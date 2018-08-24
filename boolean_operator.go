@@ -7,10 +7,11 @@ import (
 type operatorType int
 
 const (
-	OperatorAnd operatorType = iota
+	OperatorAnd  operatorType = iota
 	OperatorNot
 	OperatorNor
 	OperatorOr
+	OperatorText
 )
 
 type BooleanOperator struct {
@@ -29,7 +30,7 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 	case OperatorOr:
 		t = "$or"
 
-	// Consider the following behaviors when using the $not operator:
+		// Consider behaviors using the $not and $regex
 	case OperatorNot:
 		t = "$not"
 		cast := *o.Conditions[0].(*BinaryOperatorImpl)
@@ -50,6 +51,12 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 				},
 			}, nil
 		}
+	case OperatorText:
+		t = "$text"
+		return bson.DocElem{
+			Name:  t,
+			Value: o.Conditions[0].(FindText),
+		}, nil
 	}
 	conds := make([]interface{}, 0, len(o.Conditions))
 	for _, cond := range o.Conditions {

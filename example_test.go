@@ -77,8 +77,17 @@ func (rep *testRepNoDefaultCriteriaWithDefaultSorting) GetDefaultSorting() []str
 	return []string{"age"}
 }
 
+func createIndexes(r repository.Repository) {
+	Expect(repository.CreateIndexes(r, mgo.Index{
+		Key:        []string{"$text:name"},
+		Background: true,
+		Sparse:     true,
+	})).To(BeNil())
+}
+
 func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.ObjectId) {
 	objid1, objid2, objid3 := bson.NewObjectId(), bson.NewObjectId(), bson.NewObjectId()
+
 	Expect(repository.Create(r, &testRepObject{
 		ID:       objid1,
 		Name:     "Snake Eyes",

@@ -23,7 +23,6 @@ const (
 
 	// Evaluation Operators
 	BinaryOperatorTypeRegex
-	BinaryOperatorTypeText
 
 	// Others Operators
 	BinaryOperatorTypeLike

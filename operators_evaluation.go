@@ -18,12 +18,16 @@ func Regex(field string, value interface{}, options string) BinaryOperator {
 	}
 }
 
-func Text(field string, value interface{}) BinaryOperator {
-	operator := "$text"
-	return &BinaryOperatorImpl{
-		Type:      BinaryOperatorTypeText,
-		OpField:   &operator,
-		FieldName: field,
-		Value:     value,
+type FindText struct {
+	Search             string  `bson:"$search"`
+	Language           *string `bson:"$language,omitempty"`
+	CaseSensitive      bool    `bson:"$caseSensitive,omitempty"`
+	DiacriticSensitive bool    `bson:"$diacriticSensitive,omitempty"`
+}
+
+func Text(value ... interface{}) *BooleanOperator {
+	return &BooleanOperator{
+		Type:       OperatorText,
+		Conditions: value,
 	}
 }
