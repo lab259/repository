@@ -1,13 +1,5 @@
 package repository
 
-func Exists(field string) BinaryOperator {
-	return &BinaryOperatorImpl{
-		Type:      BinaryOperatorTypeExists,
-		FieldName: field,
-		Value:     true,
-	}
-}
-
 func NotExists(field string) BinaryOperator {
 	return &BinaryOperatorImpl{
 		Type:      BinaryOperatorTypeExists,

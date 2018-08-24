@@ -28,17 +28,28 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 		t = "$nor"
 	case OperatorOr:
 		t = "$or"
+
+	// Consider the following behaviors when using the $not operator:
 	case OperatorNot:
 		t = "$not"
 		cast := *o.Conditions[0].(*BinaryOperatorImpl)
-		return bson.DocElem{
-			Name: *o.Field,
-			Value: bson.M{
-				t: bson.M{
-					*cast.OpField: cast.Value,
+		if cast.Type == BinaryOperatorTypeRegex {
+			return bson.DocElem{
+				Name: *o.Field,
+				Value: bson.M{
+					t: cast.Value,
 				},
-			},
-		}, nil
+			}, nil
+		} else {
+			return bson.DocElem{
+				Name: *o.Field,
+				Value: bson.M{
+					t: bson.M{
+						*cast.OpField: cast.Value,
+					},
+				},
+			}, nil
+		}
 	}
 	conds := make([]interface{}, 0, len(o.Conditions))
 	for _, cond := range o.Conditions {

@@ -17,8 +17,15 @@ const (
 	BinaryOperatorTypeNE
 	BinaryOperatorTypeNIN
 
-	// Operators
+	// Element Operators
 	BinaryOperatorTypeExists
+	BinaryOperatorType
+
+	// Evaluation Operators
+	BinaryOperatorTypeRegex
+	BinaryOperatorTypeText
+
+	// Others Operators
 	BinaryOperatorTypeLike
 	BinaryOperatorTypeNotLike
 	BinaryOperatorTypeStartsWith
@@ -53,21 +60,31 @@ func (o *BinaryOperatorImpl) GetCondition() (bson.DocElem, error) {
 		return bson.DocElem{Name: o.FieldName, Value: o.Value}, nil
 	case BinaryOperatorTypeGT:
 		operator = "$gt"
+		o.OpField = &operator
 	case BinaryOperatorTypeGTE:
 		operator = "$gte"
+		o.OpField = &operator
 	case BinaryOperatorTypeIN:
 		operator = "$in"
+		o.OpField = &operator
 	case BinaryOperatorTypeLT:
 		operator = "$lt"
 		o.OpField = &operator
 	case BinaryOperatorTypeLTE:
 		operator = "$lte"
+		o.OpField = &operator
 	case BinaryOperatorTypeNIN:
 		operator = "$nin"
+		o.OpField = &operator
 	case BinaryOperatorTypeNE:
 		operator = "$ne"
+		o.OpField = &operator
 	case BinaryOperatorTypeExists:
 		operator = "$exists"
+		o.OpField = &operator
+	case BinaryOperatorTypeRegex:
+		operator = "$regex"
+		o.OpField = &operator
 		/*
 		case BinaryOperatorTypeLike:
 			return bson.DocElem{

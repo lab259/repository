@@ -17,6 +17,7 @@ type testRepObject struct {
 	Strength int           `bson:"strength,omitempty"`
 	Agiliy   int           `bson:"agility,omitempty"`
 	Tags     []string      `bson:"tags,omitempty"`
+	Status   bool          `bson:"status,omitempty"`
 }
 
 type testRepNoDefaultCriteriaNoDefaultSorting struct {
@@ -85,6 +86,7 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Strength: 7,
 		Agiliy:   9,
 		Tags:     []string{"blue", "yellow", "green"},
+		Status:   true,
 	})).To(BeNil())
 	Expect(repository.Create(r, &testRepObject{
 		ID:       objid2,
@@ -93,6 +95,7 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Strength: 5,
 		Agiliy:   9,
 		Tags:     []string{"yellow", "red"},
+		Status:   false,
 	})).To(BeNil())
 	Expect(repository.Create(r, &testRepObject{
 		ID:       objid3,
