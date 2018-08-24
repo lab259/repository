@@ -3,7 +3,7 @@ package repository_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	repository "."
+	"."
 )
 
 var _ = Describe("BinaryOperator", func() {
@@ -79,17 +79,17 @@ var _ = Describe("BinaryOperator", func() {
 		Expect(err.Error()).To(ContainSubstring("forced error"))
 	})
 
-	PIt("should find objects with an $not condition", func() {
+	It("should find objects with an $not condition", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
-		not := repository.EQ("name", "Duke")
 		Expect(repository.FindAll(r, &objs, repository.Not(
-			&not,
+			repository.EQ("name", "Duke"),
 		),
 		)).To(BeNil())
-		Expect(objs).To(HaveLen(3))
+		Expect(objs).To(HaveLen(2))
 		Expect(objs[0].Name).To(Equal("Snake Eyes"))
+		Expect(objs[1].Name).To(Equal("Scarlett"))
 	})
 
 	It("should find objects with an $nor condition", func() {

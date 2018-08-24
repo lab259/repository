@@ -95,7 +95,6 @@ var _ = Describe("Operators Logical", func() {
 		Expect(err.Error()).To(ContainSubstring("forced error"))
 	})
 
-	// TODO FIX Tests operator $not
 	It("should find objects with an $not condition", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
@@ -115,7 +114,7 @@ var _ = Describe("Operators Logical", func() {
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
 		err := repository.FindAll(r, &objs, repository.Not(
-			&repository.BinaryOperatorImpl{},
+			repository.GT("",""),
 		))
 		Expect(err)
 	})

@@ -29,15 +29,13 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 	case OperatorOr:
 		t = "$or"
 	case OperatorNot:
-
 		t = "$not"
-		tt := "$lt"
 		cast := *o.Conditions[0].(*BinaryOperatorImpl)
 		return bson.DocElem{
 			Name: *o.Field,
 			Value: bson.M{
 				t: bson.M{
-					tt: cast.Value,
+					*cast.OpField: cast.Value,
 				},
 			},
 		}, nil
