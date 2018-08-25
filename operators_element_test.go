@@ -18,7 +18,7 @@ var _ = Describe("Operators Element", func() {
 		objs := make([]testRepObject, 0)
 		Expect(repository.FindAll(r, &objs, repository.And(
 			repository.WithCriteria(
-				repository.Exists("status"),
+				repository.Exists("status", true),
 			),
 		))).To(BeNil())
 		Expect(objs).To(HaveLen(1))
@@ -30,7 +30,7 @@ var _ = Describe("Operators Element", func() {
 		insertObjects(r)
 		objs := make([]testRepObject, 0)
 		Expect(repository.FindAll(r, &objs, repository.Not(
-			repository.Exists("status"),
+			repository.Exists("status", true),
 		))).To(BeNil())
 		Expect(objs).To(HaveLen(2))
 		Expect(objs[0].Name).To(Equal("Scarlett"))

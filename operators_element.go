@@ -1,12 +1,12 @@
 package repository
 
-func Exists(field string) BinaryOperator {
+func Exists(field string, value interface{}) BinaryOperator {
 	operator := "$exists"
 	return &BinaryOperatorImpl{
 		Type:      BinaryOperatorTypeExists,
 		OpField:   &operator,
 		FieldName: field,
-		Value:     true,
+		Value:     value,
 	}
 }
 
