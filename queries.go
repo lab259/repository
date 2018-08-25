@@ -31,17 +31,3 @@ func WithSort(fields ... string) *Sort {
 		Fields: fields,
 	}
 }
-
-func And(conditions ... interface{}) *BooleanOperator {
-	return &BooleanOperator{
-		Type:       OperatorAnd,
-		Conditions: conditions,
-	}
-}
-
-func Or(conditions ... interface{}) *BooleanOperator {
-	return &BooleanOperator{
-		Type:       OperatorOr,
-		Conditions: conditions,
-	}
-}

@@ -7,13 +7,37 @@ import (
 type binaryOperatorType int
 
 const (
+	// Comparison Operators
 	BinaryOperatorTypeEq = iota
-	BinaryoperatorTypeGT
-	BinaryoperatorTypeLT
-	BinaryoperatorTypeGTE
-	BinaryoperatorTypeLTE
-	BinaryoperatorTypeExists
-	BinaryoperatorTypeNotExists
+	BinaryOperatorTypeGT
+	BinaryOperatorTypeGTE
+	BinaryOperatorTypeIN
+	BinaryOperatorTypeLT
+	BinaryOperatorTypeLTE
+	BinaryOperatorTypeNE
+	BinaryOperatorTypeNIN
+
+	// Element Operators
+	BinaryOperatorTypeExists
+	BinaryOperatorType
+
+	// Evaluation Operators
+	BinaryOperatorTypeRegex
+
+	// Others Operators
+	BinaryOperatorTypeLike
+	BinaryOperatorTypeNotLike
+	BinaryOperatorTypeStartsWith
+	BinaryOperatorTypeEndsWith
+	BinaryOperatorTypeHasValue
+	BinaryOperatorTypeNotHasValue
+	BinaryOperatorTypeElemMatch
+	BinaryOperatorTypeNotElemMatch
+	BinaryOperatorRelativeAfter
+	BinaryOperatorRelativeBefore
+	BinaryOperatorRelativeExactly
+	BinaryOperatorExactly
+	BinaryOperatorBetween
 )
 
 type BinaryOperator interface {
@@ -21,31 +45,22 @@ type BinaryOperator interface {
 }
 
 type BinaryOperatorImpl struct {
+	Attribute *string
+	OpField   *string
 	FieldName string
 	Type      binaryOperatorType
 	Value     interface{}
 }
 
 func (o *BinaryOperatorImpl) GetCondition() (bson.DocElem, error) {
-	var operator string
 	switch o.Type {
 	case BinaryOperatorTypeEq:
 		return bson.DocElem{Name: o.FieldName, Value: o.Value}, nil
-	case BinaryoperatorTypeGT:
-		operator = "$gt"
-	case BinaryoperatorTypeGTE:
-		operator = "$gte"
-	case BinaryoperatorTypeLT:
-		operator = "$lt"
-	case BinaryoperatorTypeLTE:
-		operator = "$lte"
-	case BinaryoperatorTypeExists:
-		operator = "$exists"
 	}
 	return bson.DocElem{
 		Name: o.FieldName,
 		Value: bson.M{
-			operator: o.Value,
+			*o.OpField: o.Value,
 		},
 	}, nil
 }
