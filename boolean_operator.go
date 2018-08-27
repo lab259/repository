@@ -7,7 +7,7 @@ import (
 type operatorType int
 
 const (
-	OperatorAnd  operatorType = iota
+	OperatorAnd operatorType = iota
 	OperatorNot
 	OperatorNor
 	OperatorOr

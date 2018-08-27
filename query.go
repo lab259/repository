@@ -35,6 +35,14 @@ func genConditions(conditions bson.D, params ...interface{}) (bson.D, error) {
 			// Appends the conditions directly to the result.
 			conditions = append(conditions, v...)
 			break
+		case bson.DocElem:
+			// Appends the condition directly to the result.
+			conditions = append(conditions, v)
+			break
+		case *bson.DocElem:
+			// Appends the condition directly to the result.
+			conditions = append(conditions, *v)
+			break
 		case BinaryOperator:
 			// If a `BinaryOperator` is passed.
 			// Get the conditions
@@ -87,9 +95,14 @@ func ApplyQueryModifiers(r Repository, query *mgo.Query, params ...interface{}) 
 	var sorting = r.GetDefaultSorting()
 	for _, param := range params {
 		switch v := param.(type) {
-		case bson.D, BinaryOperator, QueryBuilder:
+		case bson.D:
+		case bson.DocElem:
+		case *bson.DocElem:
+		case BinaryOperator:
+		case QueryBuilder:
 			// Ignoring those types because they are exclusively used for
 			// building the conditions to bootstrap the `mgo.Query` object.
+			break
 		case *Sort:
 			// For sorting it has a special case: it will aggregate all sortings
 			// for a late modification.
@@ -98,6 +111,7 @@ func ApplyQueryModifiers(r Repository, query *mgo.Query, params ...interface{}) 
 			} else {
 				sorting = append(sorting, v.Fields...)
 			}
+			break
 		case QueryModifier:
 			// Queryable objects will apply some transformation to the query.
 			var err error
@@ -105,6 +119,7 @@ func ApplyQueryModifiers(r Repository, query *mgo.Query, params ...interface{}) 
 			if err != nil {
 				return nil, err
 			}
+			break
 		default:
 			// This type is not supported.
 			return nil, NewErrTypeNotSupported(v)
