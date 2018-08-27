@@ -153,7 +153,7 @@ var _ = Describe("Find", func() {
 		Expect(err).To(BeNil())
 		var obj testRepObject
 		Expect(repository.Find(r, &obj, repository.WithCriteria(
-			repository.Exists("age"),
+			repository.Exists("age", true),
 		))).To(BeNil())
 		Expect(obj.Name).To(Equal("Snake Eyes"))
 		Expect(obj.Age).To(Equal(33))
@@ -170,7 +170,7 @@ var _ = Describe("Find", func() {
 		Expect(err).To(BeNil())
 		var obj testRepObject
 		Expect(repository.Find(r, &obj, repository.WithCriteria(
-			repository.NotExists("age"),
+			repository.Exists("age", false),
 		))).To(Equal(mgo.ErrNotFound))
 	})
 })

@@ -1,4 +1,3 @@
-
 GOPATH=$(CURDIR)/.gopath
 GOPATHCMD=GOPATH=$(GOPATH)
 

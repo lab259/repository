@@ -15,5 +15,11 @@
 .vscode/
 .gopath/
 .cover/
+.coverage/
+bin/
+src/*
+pkg
+logs
+private/
 
 *.coverprofile
