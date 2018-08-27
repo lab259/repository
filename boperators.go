@@ -1,57 +1,131 @@
 package repository
 
-func EQ(field string, value interface{}) BinaryOperator {
+func NotExists(field string) BinaryOperator {
 	return &BinaryOperatorImpl{
-		Type:      BinaryOperatorTypeEq,
+		Type:      BinaryOperatorTypeExists,
+		FieldName: field,
+		Value:     false,
+	}
+}
+
+func Like(field string, value interface{}) BinaryOperator {
+	return &BinaryOperatorImpl{
+		Type:      BinaryOperatorTypeLike,
 		FieldName: field,
 		Value:     value,
 	}
 }
 
-func GT(field string, value interface{}) BinaryOperator {
+func NotLike(field string, value interface{}) BinaryOperator {
 	return &BinaryOperatorImpl{
-		Type:      BinaryoperatorTypeGT,
+		Type:      BinaryOperatorTypeNotLike,
 		FieldName: field,
 		Value:     value,
 	}
 }
 
-func GTE(field string, value interface{}) BinaryOperator {
+func StartsWith(field string, value interface{}) BinaryOperator {
 	return &BinaryOperatorImpl{
-		Type:      BinaryoperatorTypeGTE,
+		Type:      BinaryOperatorTypeStartsWith,
 		FieldName: field,
 		Value:     value,
 	}
 }
 
-func LT(field string, value interface{}) BinaryOperator {
+func EndsWith(field string, value interface{}) BinaryOperator {
 	return &BinaryOperatorImpl{
-		Type:      BinaryoperatorTypeLT,
+		Type:      BinaryOperatorTypeEndsWith,
 		FieldName: field,
 		Value:     value,
 	}
 }
 
-func LTE(field string, value interface{}) BinaryOperator {
+func HasValue(field string) BinaryOperator {
 	return &BinaryOperatorImpl{
-		Type:      BinaryoperatorTypeLTE,
-		FieldName: field,
-		Value:     value,
-	}
-}
-
-func Exists(field string) BinaryOperator {
-	return &BinaryOperatorImpl{
-		Type:      BinaryoperatorTypeExists,
+		Type:      BinaryOperatorTypeHasValue,
 		FieldName: field,
 		Value:     true,
 	}
 }
 
-func NotExists(field string) BinaryOperator {
+func NotHasValue(field string) BinaryOperator {
 	return &BinaryOperatorImpl{
-		Type:      BinaryoperatorTypeExists,
+		Type:      BinaryOperatorTypeNotHasValue,
 		FieldName: field,
 		Value:     false,
+	}
+}
+
+func ElemMatch(attribute string, field string, value interface{}) BinaryOperator {
+	return match(BinaryOperatorTypeElemMatch, attribute, field, "", value)
+}
+
+func NotElemMatch(attribute string, field string, value interface{}) BinaryOperator {
+	return match(BinaryOperatorTypeNotElemMatch, attribute, field, "$ne", value)
+}
+
+func ElemMatchGT(attribute string, field string, value interface{}) BinaryOperator {
+	return match(BinaryOperatorTypeNotElemMatch, attribute, field, "$gt", value)
+}
+
+func ElemMatchLT(attribute string, field string, value interface{}) BinaryOperator {
+	return match(BinaryOperatorTypeNotElemMatch, attribute, field, "$lt", value)
+}
+
+func ElemMatchHasValue(attribute string, field string) BinaryOperator {
+	return match(BinaryOperatorTypeNotElemMatch, attribute, field, "$exists", true)
+}
+
+func ElemMatchNotHasValue(attribute string, field string) BinaryOperator {
+	return match(BinaryOperatorTypeNotElemMatch, attribute, field, "$exists", false)
+}
+
+func match(binaryType binaryOperatorType, attribute string, field string, op string, value interface{}) BinaryOperator {
+	return &BinaryOperatorImpl{
+		Type: binaryType,
+		// OpField:   &op,
+		// Attribute: &attribute,
+		FieldName: field,
+		Value:     value,
+	}
+}
+
+func RelativeAfter(field string, value interface{}) BinaryOperator {
+	return &BinaryOperatorImpl{
+		Type:      BinaryOperatorRelativeAfter,
+		FieldName: field,
+		Value:     value,
+	}
+}
+
+func RelativeBefore(field string, value interface{}) BinaryOperator {
+	return &BinaryOperatorImpl{
+		Type:      BinaryOperatorRelativeBefore,
+		FieldName: field,
+		Value:     value,
+	}
+}
+
+func RelativeExactly(field string, value interface{}) BinaryOperator {
+	return &BinaryOperatorImpl{
+		Type:      BinaryOperatorRelativeExactly,
+		FieldName: field,
+		Value:     value,
+	}
+}
+
+func Exactly(field string, value interface{}) BinaryOperator {
+	return &BinaryOperatorImpl{
+		Type:      BinaryOperatorExactly,
+		FieldName: field,
+		Value:     value,
+	}
+}
+
+func Between(field string, value interface{}) BinaryOperator {
+	return &BinaryOperatorImpl{
+		Type:      BinaryOperatorBetween,
+		FieldName: field,
+		Value:     value,
 	}
 }

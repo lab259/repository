@@ -16,6 +16,8 @@ type testRepObject struct {
 	Age      int           `bson:"age,omitempty"`
 	Strength int           `bson:"strength,omitempty"`
 	Agiliy   int           `bson:"agility,omitempty"`
+	Tags     []string      `bson:"tags,omitempty"`
+	Status   bool          `bson:"status,omitempty"`
 }
 
 type testRepNoDefaultCriteriaNoDefaultSorting struct {
@@ -75,14 +77,25 @@ func (rep *testRepNoDefaultCriteriaWithDefaultSorting) GetDefaultSorting() []str
 	return []string{"age"}
 }
 
+func createIndexes(r repository.Repository) {
+	Expect(repository.CreateIndexes(r, mgo.Index{
+		Key:        []string{"$text:name"},
+		Background: true,
+		Sparse:     true,
+	})).To(BeNil())
+}
+
 func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.ObjectId) {
 	objid1, objid2, objid3 := bson.NewObjectId(), bson.NewObjectId(), bson.NewObjectId()
+
 	Expect(repository.Create(r, &testRepObject{
 		ID:       objid1,
 		Name:     "Snake Eyes",
 		Age:      33,
 		Strength: 7,
 		Agiliy:   9,
+		Tags:     []string{"blue", "yellow", "green"},
+		Status:   true,
 	})).To(BeNil())
 	Expect(repository.Create(r, &testRepObject{
 		ID:       objid2,
@@ -90,6 +103,8 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Age:      22,
 		Strength: 5,
 		Agiliy:   9,
+		Tags:     []string{"yellow", "red"},
+		Status:   false,
 	})).To(BeNil())
 	Expect(repository.Create(r, &testRepObject{
 		ID:       objid3,
@@ -97,6 +112,7 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Age:      22,
 		Strength: 8,
 		Agiliy:   7,
+		Tags:     []string{"green", "black"},
 	})).To(BeNil())
 
 	return objid1, objid2, objid3
