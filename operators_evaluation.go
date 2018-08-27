@@ -25,9 +25,9 @@ type FindText struct {
 	DiacriticSensitive bool    `bson:"$diacriticSensitive,omitempty"`
 }
 
-func Text(value ... interface{}) *BooleanOperator {
+func Text(value FindText) *BooleanOperator {
 	return &BooleanOperator{
 		Type:       OperatorText,
-		Conditions: value,
+		Conditions: []interface{}{value},
 	}
 }
