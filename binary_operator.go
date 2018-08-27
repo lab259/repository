@@ -23,6 +23,7 @@ const (
 	// Evaluation Operators
 	BinaryOperatorTypeRegex
 )
+
 type BinaryOperator interface {
 	GetCondition() (bson.DocElem, error)
 }
