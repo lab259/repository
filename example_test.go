@@ -78,10 +78,11 @@ func (rep *testRepNoDefaultCriteriaWithDefaultSorting) GetDefaultSorting() []str
 }
 
 func createIndexes(r repository.Repository) {
-	Expect(repository.CreateIndexes(r, mgo.Index{
+	index := mgo.Index{
 		Key:        []string{"$text:name"},
-		Background: true,
-		Sparse:     true,
+	}
+	Expect(r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
+		return db.C(r.GetCollectionName()).EnsureIndex(index)
 	})).To(BeNil())
 }
 

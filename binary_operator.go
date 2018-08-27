@@ -19,27 +19,10 @@ const (
 
 	// Element Operators
 	BinaryOperatorTypeExists
-	BinaryOperatorType
 
 	// Evaluation Operators
 	BinaryOperatorTypeRegex
-
-	// Others Operators
-	BinaryOperatorTypeLike
-	BinaryOperatorTypeNotLike
-	BinaryOperatorTypeStartsWith
-	BinaryOperatorTypeEndsWith
-	BinaryOperatorTypeHasValue
-	BinaryOperatorTypeNotHasValue
-	BinaryOperatorTypeElemMatch
-	BinaryOperatorTypeNotElemMatch
-	BinaryOperatorRelativeAfter
-	BinaryOperatorRelativeBefore
-	BinaryOperatorRelativeExactly
-	BinaryOperatorExactly
-	BinaryOperatorBetween
 )
-
 type BinaryOperator interface {
 	GetCondition() (bson.DocElem, error)
 }
