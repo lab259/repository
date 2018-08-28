@@ -62,10 +62,7 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 		}, nil
 	case OperatorTypeElemMatch:
 		t = "$elemMatch"
-		var (
-			name string
-			el   bson.DocElem
-		)
+		var name string
 		elem := make(bson.D, 0, len(o.Conditions))
 		for i, cond := range o.Conditions {
 			switch cond.(type) {
@@ -81,7 +78,7 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 				} else {
 					name = o.Conditions[i].(*BinaryOperatorImpl).FieldName
 				}
-				el = bson.DocElem{
+				el := bson.DocElem{
 					Name:  name,
 					Value: o.Conditions[i].(*BinaryOperatorImpl).Value,
 				}
@@ -90,12 +87,6 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 				return bson.DocElem{}, NewErrTypeNotSupported(cond)
 			}
 		}
-		// panic(bson.DocElem{
-		// 	Name: *o.Field,
-		// 	Value: bson.M{
-		// 		t: elem,
-		// 	},
-		// })
 		return bson.DocElem{
 			Name: *o.Field,
 			Value: bson.M{

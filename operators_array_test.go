@@ -25,6 +25,16 @@ var _ = Describe("Operators Array", func() {
 			Expect(objs[0].Score).To(Equal([]int{1, 2, 4, 5, 9}))
 		})
 
+		It("should fail object with an $elemMatch condition single query pass field failed", func() {
+			r := &testRepNoDefaultCriteriaNoDefaultSorting{}
+			insertObjects(r)
+			objs := make([]testRepObject, 0)
+			Expect(repository.FindAll(r, &objs, repository.ElemMatch(
+				"score", repository.LT("fail", 10),
+			))).To(BeNil())
+			Expect(objs).To(HaveLen(0))
+		})
+
 		It("should find object with an $elemMatch condition", func() {
 			r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 			insertObjects(r)
