@@ -40,10 +40,17 @@ func (o *BinaryOperatorImpl) GetCondition() (bson.DocElem, error) {
 	case BinaryOperatorTypeEq:
 		return bson.DocElem{Name: o.FieldName, Value: o.Value}, nil
 	}
-	return bson.DocElem{
-		Name: o.FieldName,
-		Value: bson.M{
-			*o.OpField: o.Value,
-		},
-	}, nil
+	if o.FieldName == "" {
+		return bson.DocElem{
+			Name:  *o.OpField,
+			Value: o.Value,
+		}, nil
+	} else {
+		return bson.DocElem{
+			Name: o.FieldName,
+			Value: bson.M{
+				*o.OpField: o.Value,
+			},
+		}, nil
+	}
 }
