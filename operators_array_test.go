@@ -66,7 +66,7 @@ var _ = Describe("Operators Array", func() {
 			Expect(objs[0].Name).To(Equal("Duke"))
 		})
 
-		It("should find object with an $elemMatch condition match in array not equals and less", func() {
+		It("should find object with an $elemMatch condition match in array equals and not less", func() {
 			r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 			insertObjects(r)
 			objs := make([]testRepObject, 0)
@@ -76,7 +76,7 @@ var _ = Describe("Operators Array", func() {
 				repository.Not(repository.LT("ability", 20)),
 			))).To(BeNil())
 			Expect(objs).To(HaveLen(1))
-			Expect(objs[0].Name).To(Equal("Snake Eyes"))
+			Expect(objs[0].Name).To(Equal("Duke"))
 		})
 
 		It("should find object with an $elemMatch condition match in array equals and greater", func() {
