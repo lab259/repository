@@ -18,6 +18,8 @@ type testRepObject struct {
 	Agiliy   int           `bson:"agility,omitempty"`
 	Tags     []string      `bson:"tags,omitempty"`
 	Status   bool          `bson:"status,omitempty"`
+	Score    []int         `bson:"score,omitempty"`
+	Details  []bson.M      `bson:"details,omitempty"`
 }
 
 type testRepNoDefaultCriteriaNoDefaultSorting struct {
@@ -79,7 +81,7 @@ func (rep *testRepNoDefaultCriteriaWithDefaultSorting) GetDefaultSorting() []str
 
 func createIndexes(r repository.Repository) {
 	index := mgo.Index{
-		Key:        []string{"$text:name"},
+		Key: []string{"$text:name"},
 	}
 	Expect(r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
 		return db.C(r.GetCollectionName()).EnsureIndex(index)
@@ -97,6 +99,24 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Agiliy:   9,
 		Tags:     []string{"blue", "yellow", "green"},
 		Status:   true,
+		Score:    []int{1, 2, 4, 5, 9},
+		Details: []bson.M{
+			{
+				"ability": 50,
+				"fruit":   "Orange",
+				"city":    "Jamaica",
+			},
+			{
+				"ability": 10,
+				"fruit":   "Apple",
+				"city":    "Brazil",
+			},
+			{
+				"ability": 30,
+				"fruit":   "Lime",
+				"city":    "News York",
+			},
+		},
 	})).To(BeNil())
 	Expect(repository.Create(r, &testRepObject{
 		ID:       objid2,
@@ -106,6 +126,19 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Agiliy:   9,
 		Tags:     []string{"yellow", "red"},
 		Status:   false,
+		Score:    []int{10, 20, 40},
+		Details: []bson.M{
+			{
+				"ability": 30,
+				"fruit":   "Pineapple",
+				"city":    "Jamaica",
+			},
+			{
+				"ability": 40,
+				"fruit":   "Apple",
+				"city":    "Canada",
+			},
+		},
 	})).To(BeNil())
 	Expect(repository.Create(r, &testRepObject{
 		ID:       objid3,
@@ -114,6 +147,14 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Strength: 8,
 		Agiliy:   7,
 		Tags:     []string{"green", "black"},
+		Score:    []int{10, 11},
+		Details: []bson.M{
+			{
+				"ability": 20,
+				"fruit":   "Guava",
+				"city":    "Brazil",
+			},
+		},
 	})).To(BeNil())
 
 	return objid1, objid2, objid3
