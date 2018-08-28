@@ -45,20 +45,21 @@ func (rep *testRepNoDefaultCriteriaNoDefaultSorting) GetDefaultSorting() []strin
 	return nil
 }
 */
-
-func TestRepository(t *testing.T) {
-	log.SetOutput(ginkgo.GinkgoWriter)
-	gomega.RegisterFailHandler(ginkgo.Fail)
+func connect() {
 	s, err := mgo.DialWithInfo(&mgo.DialInfo{
 		Addrs:    []string{"localhost"},
 		Database: "repository_test",
 	})
-	if err != nil {
-		t.Fatalf("error initializing the session: %s", err)
-	}
+
+	gomega.Expect(err).To(gomega.BeNil())
 	session = s
 	defaultQueryRunner = repository.NewSimpleQueryRunner(&mgoService{}, "repository_test")
+}
 
+func TestRepository(t *testing.T) {
+	log.SetOutput(ginkgo.GinkgoWriter)
+	gomega.RegisterFailHandler(ginkgo.Fail)
+	connect()
 	/*
 		type testRepObject struct {
 			ID   bson.ObjectId `bson:"_id,omitempty"`

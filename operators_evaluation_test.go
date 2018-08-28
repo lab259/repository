@@ -10,6 +10,7 @@ import (
 var _ = Describe("Operators Evaluation:", func() {
 	BeforeEach(func() {
 		Expect(clearSession()).To(BeNil())
+		connect()
 	})
 
 	Context("Operator: $regex", func() {
@@ -54,8 +55,7 @@ var _ = Describe("Operators Evaluation:", func() {
 			Expect(objs[0].Name).To(Equal("Snake Eyes"))
 		})
 
-		// TODO: Fixes created index in many tests
-		PIt("should find objects with a $text condition not matches", func() {
+		It("should find objects with a $text condition not matches", func() {
 			r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 			createIndexes(r)
 			insertObjects(r)
