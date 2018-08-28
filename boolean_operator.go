@@ -62,7 +62,6 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 		}, nil
 	case OperatorTypeElemMatch:
 		t = "$elemMatch"
-		var name string
 		elem := make(bson.D, 0, len(o.Conditions))
 		for i, cond := range o.Conditions {
 			switch cond.(type) {
@@ -73,16 +72,11 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 				}
 				elem = append(elem, p)
 			case BinaryOperator:
-				if o.Conditions[i].(*BinaryOperatorImpl).FieldName == "" {
-					name = *o.Conditions[i].(*BinaryOperatorImpl).OpField
-				} else {
-					name = o.Conditions[i].(*BinaryOperatorImpl).FieldName
+				p, err := o.Conditions[i].(*BinaryOperatorImpl).GetCondition()
+				if err != nil {
+					return bson.DocElem{}, NewErrTypeNotSupported(cond)
 				}
-				el := bson.DocElem{
-					Name:  name,
-					Value: o.Conditions[i].(*BinaryOperatorImpl).Value,
-				}
-				elem = append(elem, el)
+				elem = append(elem, p)
 			default:
 				return bson.DocElem{}, NewErrTypeNotSupported(cond)
 			}

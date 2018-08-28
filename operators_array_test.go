@@ -96,7 +96,7 @@ var _ = Describe("Operators Array", func() {
 			Expect(repository.FindAll(r, &objs, repository.ElemMatch(
 				"details",
 				repository.EQ("city", "Jamaica"),
-				repository.LTE("ability", 50),
+				repository.GTE("ability", 50),
 			), repository.ElemMatch("score", repository.LT("", 20)))).To(BeNil())
 			Expect(objs).To(HaveLen(1))
 			Expect(objs[0].Name).To(Equal("Snake Eyes"))
