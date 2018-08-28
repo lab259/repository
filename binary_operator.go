@@ -29,7 +29,6 @@ type BinaryOperator interface {
 }
 
 type BinaryOperatorImpl struct {
-	Attribute *string
 	OpField   *string
 	FieldName string
 	Type      binaryOperatorType
