@@ -11,7 +11,12 @@ const (
 	OperatorNot
 	OperatorNor
 	OperatorOr
+
+	// Evaluation Operators
 	OperatorText
+
+	// Array Operators
+	OperatorTypeElemMatch
 )
 
 type BooleanOperator struct {
@@ -29,9 +34,7 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 		t = "$nor"
 	case OperatorOr:
 		t = "$or"
-
-		// Consider behaviors using the $not and $regex
-	case OperatorNot:
+	case OperatorNot: // Consider behaviors using the $not and $regex
 		t = "$not"
 		cast := *o.Conditions[0].(*BinaryOperatorImpl)
 		if cast.Type == BinaryOperatorTypeRegex {
@@ -56,6 +59,33 @@ func (o *BooleanOperator) GetCondition() (bson.DocElem, error) {
 		return bson.DocElem{
 			Name:  t,
 			Value: o.Conditions[0].(FindText),
+		}, nil
+	case OperatorTypeElemMatch:
+		t = "$elemMatch"
+		elem := make(bson.D, 0, len(o.Conditions))
+		for i, cond := range o.Conditions {
+			switch cond.(type) {
+			case *BooleanOperator:
+				p, err := o.Conditions[i].(*BooleanOperator).GetCondition()
+				if err != nil {
+					return bson.DocElem{}, NewErrTypeNotSupported(cond)
+				}
+				elem = append(elem, p)
+			case BinaryOperator:
+				p, err := o.Conditions[i].(*BinaryOperatorImpl).GetCondition()
+				if err != nil {
+					return bson.DocElem{}, NewErrTypeNotSupported(cond)
+				}
+				elem = append(elem, p)
+			default:
+				return bson.DocElem{}, NewErrTypeNotSupported(cond)
+			}
+		}
+		return bson.DocElem{
+			Name: *o.Field,
+			Value: bson.M{
+				t: elem,
+			},
 		}, nil
 	}
 	conds := make([]interface{}, 0, len(o.Conditions))
