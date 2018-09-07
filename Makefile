@@ -29,3 +29,9 @@ deps:
 
 deps-ci:
 	-go get -v -t ./...
+
+vet:
+	@$(GOPATHCMD) go vet ./...
+
+fmt:
+	@$(GOPATHCMD) go vet ./...

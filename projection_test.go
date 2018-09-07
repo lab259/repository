@@ -5,7 +5,8 @@ import (
 	. "github.com/onsi/gomega"
 
 	"."
-	"gopkg.in/mgo.v2/bson"
+
+	"github.com/globalsign/mgo/bson"
 )
 
 var _ = Describe("Projection", func() {
