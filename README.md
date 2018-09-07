@@ -14,4 +14,4 @@ library).
 
 ## License
 
-Until mature, this framework will be under private license.
+MIT
