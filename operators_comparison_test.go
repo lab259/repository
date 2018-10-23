@@ -38,7 +38,7 @@ var _ = Describe("Operators Comparison", func() {
 			Expect(objs).To(HaveLen(1))
 			Expect(objs[0].Name).To(Equal("Scarlett"))
 			Expect(objs[0].Age).To(Equal(22))
-			Expect(objs[0].Agiliy).To(Equal(9))
+			Expect(objs[0].Agility).To(Equal(9))
 		})
 
 		It("should find empty objects with an $eq condition", func() {
