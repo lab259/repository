@@ -84,7 +84,7 @@ var _ = Describe("Operators Logical", func() {
 			Expect(objs[0].Name).To(Equal("Snake Eyes"))
 			Expect(objs[0].Age).To(Equal(33))
 			Expect(objs[0].Strength).To(Equal(7))
-			Expect(objs[0].Agiliy).To(Equal(9))
+			Expect(objs[0].Agility).To(Equal(9))
 		})
 
 		It("should find objects with an $or and a criteria with a erroneous condition", func() {
@@ -113,7 +113,7 @@ var _ = Describe("Operators Logical", func() {
 			Expect(objs[0].Name).To(Equal("Snake Eyes"))
 			Expect(objs[0].Age).To(Equal(33))
 			Expect(objs[0].Strength).To(Equal(7))
-			Expect(objs[0].Agiliy).To(Equal(9))
+			Expect(objs[0].Agility).To(Equal(9))
 		})
 
 		It("should find objects with an $not and a criteria with a erroneous condition", func() {

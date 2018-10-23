@@ -15,7 +15,7 @@ type testRepObject struct {
 	Name     string        `bson:"name,omitempty"`
 	Age      int           `bson:"age,omitempty"`
 	Strength int           `bson:"strength,omitempty"`
-	Agiliy   int           `bson:"agility,omitempty"`
+	Agility  int           `bson:"agility,omitempty"`
 	Tags     []string      `bson:"tags,omitempty"`
 	Status   bool          `bson:"status,omitempty"`
 	Score    []int         `bson:"score,omitempty"`
@@ -96,7 +96,7 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Name:     "Snake Eyes",
 		Age:      33,
 		Strength: 7,
-		Agiliy:   9,
+		Agility:  9,
 		Tags:     []string{"blue", "yellow", "green"},
 		Status:   true,
 		Score:    []int{1, 2, 4, 5, 9},
@@ -123,7 +123,7 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Name:     "Scarlett",
 		Age:      22,
 		Strength: 5,
-		Agiliy:   9,
+		Agility:  9,
 		Tags:     []string{"yellow", "red"},
 		Status:   false,
 		Score:    []int{10, 20, 40},
@@ -145,7 +145,7 @@ func insertObjects(r repository.Repository) (bson.ObjectId, bson.ObjectId, bson.
 		Name:     "Duke",
 		Age:      22,
 		Strength: 8,
-		Agiliy:   7,
+		Agility:  7,
 		Tags:     []string{"green", "black"},
 		Score:    []int{10, 11},
 		Details: []bson.M{
