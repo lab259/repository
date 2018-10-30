@@ -12,6 +12,9 @@ func UpdateRawWithCriteria(r Repository, object interface{}, selector ...interfa
 			return err
 		}
 		info, err := db.C(r.GetCollectionName()).UpdateAll(criteria, object)
+		if err != nil {
+			return err
+		}
 
 		if info.Matched == 0 {
 			return mgo.ErrNotFound
