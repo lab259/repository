@@ -3,10 +3,9 @@ package repository_test
 import (
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"github.com/lab259/repository"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-
-	"."
 )
 
 var _ = Describe("Create", func() {

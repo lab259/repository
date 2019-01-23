@@ -20,13 +20,13 @@ func ByID(id interface{}) BinaryOperator {
 	}
 }
 
-func WithCriteria(params ... interface{}) *Criteria {
+func WithCriteria(params ...interface{}) *Criteria {
 	return &Criteria{
 		Conditions: params,
 	}
 }
 
-func WithSort(fields ... string) *Sort {
+func WithSort(fields ...string) *Sort {
 	return &Sort{
 		Fields: fields,
 	}

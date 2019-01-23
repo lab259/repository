@@ -10,7 +10,12 @@ jobs:
     steps:
       - checkout
 
-      - run: sudo apt install mongodb-clients libssl-dev
+      - restore_cache:
+          key: dependency-cache-{{ checksum "Gopkg.lock" }}
+
+      - run: 
+          name: Install libs
+          command: sudo apt install mongodb-clients libssl-dev
 
       - run:
           name: Install dockerize
@@ -22,7 +27,25 @@ jobs:
           name: Wait for MongoDB
           command: dockerize -wait tcp://localhost:27017 -timeout 10s
 
-      - run: go get -u github.com/onsi/ginkgo/ginkgo
-      - run: make deps-ci
-      - run: make coverage-ci
-      - run: bash <(curl -s https://codecov.io/bash)
+      - run:
+          name: Install dep
+          command: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+      
+      - run:
+          name: Install ginkgo
+          command: go get -u github.com/onsi/ginkgo/ginkgo
+      
+      - run:
+          name: Get dependencies
+          command: make dep-ensure
+
+      - save_cache:
+            key: dependency-cache-{{ checksum "Gopkg.lock" }}
+            paths:
+              - vendor
+
+      - run:
+          name: Run tests
+          command: |
+            make coverage-ci
+            bash <(curl -s https://codecov.io/bash)
