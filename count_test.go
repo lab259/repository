@@ -1,9 +1,9 @@
 package repository_test
 
 import (
+	"github.com/lab259/repository"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"."
 )
 
 var _ = Describe("Count", func() {

@@ -1,13 +1,13 @@
 package repository
 
-func And(conditions ... interface{}) *BooleanOperator {
+func And(conditions ...interface{}) *BooleanOperator {
 	return &BooleanOperator{
 		Type:       OperatorAnd,
 		Conditions: conditions,
 	}
 }
 
-func Nor(conditions ... interface{}) *BooleanOperator {
+func Nor(conditions ...interface{}) *BooleanOperator {
 	return &BooleanOperator{
 		Type:       OperatorNor,
 		Conditions: conditions,
@@ -24,7 +24,7 @@ func Not(conditions interface{}) *BooleanOperator {
 	}
 }
 
-func Or(conditions ... interface{}) *BooleanOperator {
+func Or(conditions ...interface{}) *BooleanOperator {
 	return &BooleanOperator{
 		Type:       OperatorOr,
 		Conditions: conditions,

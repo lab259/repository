@@ -12,14 +12,13 @@
 *.out
 
 .idea/
-.vscode/
-.gopath/
+pkg/
 .cover/
-.coverage/
-bin/
-src/*
-pkg
-logs
-private/
-
 *.coverprofile
+vendor/
+bin/
+.docker/volumes
+gin-bin
+*.gin
+.vscode/
+.docker/mongo/backups

@@ -1,16 +1,13 @@
-GOPATH=$(CURDIR)/.gopath
+GOPATH=$(CURDIR)/../../../../
 GOPATHCMD=GOPATH=$(GOPATH)
 
 COVERDIR=$(CURDIR)/.cover
 COVERAGEFILE=$(COVERDIR)/cover.out
 
-.PHONY: deps deps-ci coverage coverage-ci test test-watch coverage coverage-html
+.PHONY: coverage coverage-ci coverage-html dep-add dep-ensure dep-update fmt test test-watch vet
 
-test:
-	@${GOPATHCMD} ginkgo --failFast ./...
-
-test-watch:
-	@${GOPATHCMD} ginkgo watch -cover -r ./...
+coverage: coverage-ci
+	@sed -i -e "s|_$(CURDIR)/|./|g" "${COVERAGEFILE}"
 
 coverage-ci:
 	@mkdir -p $(COVERDIR)
@@ -18,20 +15,31 @@ coverage-ci:
 	@echo "mode: count" > "${COVERAGEFILE}"
 	@find . -type f -name *.coverprofile -exec grep -h -v "^mode:" {} >> "${COVERAGEFILE}" \; -exec rm -f {} \;
 
-coverage: coverage-ci
-	@sed -i -e "s|_$(CURDIR)/|./|g" "${COVERAGEFILE}"
-
 coverage-html:
 	@$(GOPATHCMD) go tool cover -html="${COVERAGEFILE}" -o .cover/report.html
 
-deps:
-	@$(GOPATHCMD) go get -v -t ./...
+dep-add:
+ifdef PACKAGE
+	@$(GOPATHCMD) dep ensure -v-add $(PACKAGE)
+else
+	@echo "Usage: PACKAGE=<package url> make dep-add"
+	@echo "The environment variable \`PACKAGE\` is not defined."
+endif
 
-deps-ci:
-	-go get -v -t ./...
+dep-ensure:
+	@$(GOPATHCMD) dep ensure -v
 
-vet:
-	@$(GOPATHCMD) go vet ./...
+dep-update:
+	@$(GOPATHCMD) dep ensure -v -update
 
 fmt:
+	@$(GOPATHCMD) go vet ./...
+
+test:
+	@${GOPATHCMD} ginkgo --failFast ./...
+
+test-watch:
+	@${GOPATHCMD} ginkgo watch -cover -r ./...
+
+vet:
 	@$(GOPATHCMD) go vet ./...
