@@ -1,12 +1,12 @@
 package repository_test
 
 import (
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
-
-	"."
+	"github.com/lab259/repository"
 
 	"github.com/globalsign/mgo/bson"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Projection", func() {

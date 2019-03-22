@@ -4,9 +4,9 @@ import (
 	"log"
 	"testing"
 
-	"."
 	"github.com/globalsign/mgo"
 	"github.com/jamillosantos/macchiato"
+	"github.com/lab259/repository"
 	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
 )
