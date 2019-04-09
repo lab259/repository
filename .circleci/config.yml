@@ -11,17 +11,10 @@ jobs:
       - checkout
 
       - restore_cache:
-          key: dependency-cache-{{ checksum "Gopkg.lock" }}
-
-      - run: 
-          name: Install libs
-          command: sudo apt install mongodb-clients libssl-dev
-
-      - run:
-          name: Install dockerize
-          command: wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && sudo tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
-          environment:
-            DOCKERIZE_VERSION: v0.3.0
+          key: 
+            - deps-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
+            - deps-{{ .Branch }}-
+            - deps-
 
       - run:
           name: Wait for MongoDB
@@ -40,7 +33,7 @@ jobs:
           command: make dep-ensure
 
       - save_cache:
-            key: dependency-cache-{{ checksum "Gopkg.lock" }}
+            key:  deps-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
             paths:
               - vendor
 
@@ -49,3 +42,6 @@ jobs:
           command: |
             make coverage-ci
             bash <(curl -s https://codecov.io/bash)
+
+      - store_test_results:
+          path: test-results
