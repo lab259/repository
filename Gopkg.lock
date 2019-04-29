@@ -46,14 +46,6 @@
   revision = "3be045cc503344c551700381369b71cf18ca80cf"
 
 [[projects]]
-  digest = "1:97589ad63151a698867bc08325e8249b221195f467b27be52c2ae0e7aef01ec4"
-  name = "github.com/lab259/repository"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "b86282c1442649336fcc1af1767901e4206b34e5"
-  version = "v0.0.1"
-
-[[projects]]
   digest = "1:c658e84ad3916da105a761660dcaeb01e63416c8ec7bc62256a9b411a05fcd67"
   name = "github.com/mattn/go-colorable"
   packages = ["."]
@@ -193,7 +185,6 @@
     "github.com/globalsign/mgo",
     "github.com/globalsign/mgo/bson",
     "github.com/jamillosantos/macchiato",
-    "github.com/lab259/repository",
     "github.com/onsi/ginkgo",
     "github.com/onsi/gomega",
   ]
