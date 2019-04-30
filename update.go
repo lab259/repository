@@ -6,9 +6,16 @@ import (
 )
 
 // UpdateAndFind does an update and returns the updated model.
-func UpdateAndFind(r Repository, id interface{}, dst interface{}, object interface{}) error {
+func UpdateAndFind(r Repository, id interface{}, dst interface{}, object interface{}, params ...interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
-		_, err := db.C(r.GetCollectionName()).Find(bson.M{"_id": id}).Apply(mgo.Change{
+		params = append(params, ByID(id))
+
+		query, err := Query(r, db.C(r.GetCollectionName()), params...)
+		if err != nil {
+			return err
+		}
+
+		_, err = query.Apply(mgo.Change{
 			Update: bson.M{
 				"$set": object,
 			},
