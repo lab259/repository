@@ -117,6 +117,35 @@ var _ = Describe("Update", func() {
 		})).To(BeNil())
 	})
 
+	It("should update and find an object with params", func() {
+		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
+		obj := &testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Chico Bento",
+			Age:  21,
+		}
+
+		var updatedObj testRepObject
+		Expect(repository.Create(r, obj)).To(BeNil())
+
+		err := repository.UpdateAndFind(r, obj.ID, &updatedObj, testRepObject{
+			Name: "Betinho Jr",
+			Age:  22,
+		}, repository.GT("age", 20))
+
+		Expect(err).To(BeNil())
+
+		Expect(defaultQueryRunner.RunWithDB(func(db *mgo.Database) error {
+			c := db.C(r.GetCollectionName())
+			objs := make([]testRepObject, 0)
+			Expect(c.Find(nil).All(&objs)).To(BeNil())
+			Expect(objs).To(HaveLen(1))
+			Expect(objs[0].Name).To(Equal("Betinho Jr"))
+			Expect(objs[0].Age).To(Equal(22))
+			return nil
+		})).To(BeNil())
+	})
+
 	It("should fail to update and find an object with params invalid", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		obj := &testRepObject{
