@@ -13,6 +13,34 @@ var _ = Describe("UpdateRawWithCriteria", func() {
 		Expect(clearSession()).To(BeNil())
 	})
 
+	It("should update an object by one field (default repository)", func() {
+		r := NewRepository()
+		obj := &testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Snake Eyes",
+			Age:  33,
+		}
+		Expect(r.Create(obj)).To(BeNil())
+		Expect(r.UpdateRawWithCriteria(
+			bson.M{
+				"$set": testRepObject{
+					ID:   obj.ID,
+					Name: "Scarlett",
+					Age:  22,
+				},
+			}, repository.EQ("name", "Snake Eyes"),
+		)).To(BeNil())
+		Expect(defaultQueryRunner.RunWithDB(func(db *mgo.Database) error {
+			c := db.C(r.GetCollectionName())
+			objs := make([]testRepObject, 0)
+			Expect(c.Find(nil).All(&objs)).To(BeNil())
+			Expect(objs).To(HaveLen(1))
+			Expect(objs[0].Name).To(Equal("Scarlett"))
+			Expect(objs[0].Age).To(Equal(22))
+			return nil
+		})).To(BeNil())
+	})
+
 	It("should update an object by one field", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		obj := &testRepObject{
@@ -194,7 +222,7 @@ var _ = Describe("UpdateRawWithCriteria", func() {
 			},
 			map[string]interface{}{
 				"_id": obj.ID,
-			}, )).To(BeNil())
+			})).To(BeNil())
 		Expect(defaultQueryRunner.RunWithDB(func(db *mgo.Database) error {
 			c := db.C(r.GetCollectionName())
 			objs := make([]testRepObject, 0)

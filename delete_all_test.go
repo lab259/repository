@@ -11,6 +11,19 @@ var _ = Describe("DeleteAll", func() {
 		Expect(clearSession()).To(BeNil())
 	})
 
+	It("should delete an object (default repository)", func() {
+		r := NewRepository()
+		_, objid2, _ := insertObjects(r)
+		deleted, err := r.DeleteAll(repository.ByID(objid2))
+		Expect(err).To(BeNil())
+		objs := make([]testRepObject, 0)
+		Expect(r.FindAll(&objs)).To(BeNil())
+		Expect(deleted).To(Equal(1))
+		Expect(objs).To(HaveLen(2))
+		Expect(objs[0].Name).To(Equal("Snake Eyes"))
+		Expect(objs[1].Name).To(Equal("Duke"))
+	})
+
 	It("should delete an object", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		_, objid2, _ := insertObjects(r)

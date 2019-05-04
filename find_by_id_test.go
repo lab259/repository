@@ -13,6 +13,15 @@ var _ = Describe("FindByID", func() {
 		Expect(clearSession()).To(BeNil())
 	})
 
+	It("should find an object by id (default repository)", func() {
+		r := NewRepository()
+		objid1, _, _ := insertObjects(r)
+		var obj testRepObject
+		Expect(r.FindByID(objid1, &obj)).To(BeNil())
+		Expect(obj.Name).To(Equal("Snake Eyes"))
+		Expect(obj.Age).To(Equal(33))
+	})
+
 	It("should find an object by id", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		objid1, _, _ := insertObjects(r)

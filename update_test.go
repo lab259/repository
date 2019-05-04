@@ -13,6 +13,29 @@ var _ = Describe("Update", func() {
 		Expect(clearSession()).To(BeNil())
 	})
 
+	It("should update an object (default repository)", func() {
+		r := NewRepository()
+		obj := &testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Snake Eyes",
+			Age:  33,
+		}
+		Expect(r.Create(obj)).To(BeNil())
+		Expect(r.Update(obj.ID, testRepObject{
+			ID:   obj.ID,
+			Name: "Scarlett",
+			Age:  22,
+		})).To(BeNil())
+		Expect(defaultQueryRunner.RunWithDB(func(db *mgo.Database) error {
+			c := db.C(r.GetCollectionName())
+			objs := make([]testRepObject, 0)
+			Expect(c.Find(nil).All(&objs)).To(BeNil())
+			Expect(objs).To(HaveLen(1))
+			Expect(objs[0].Name).To(Equal("Scarlett"))
+			Expect(objs[0].Age).To(Equal(22))
+			return nil
+		})).To(BeNil())
+	})
 	It("should update an object", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		obj := &testRepObject{
@@ -57,6 +80,34 @@ var _ = Describe("Update", func() {
 			Expect(objs[0].Age).To(Equal(22))
 			return nil
 		})).To(BeNil())
+	})
+
+	It("should update and find an object (default repository)", func() {
+		r := NewRepository()
+		obj := &testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Snake Eyes",
+			Age:  33,
+		}
+
+		var updatedObj testRepObject
+		Expect(r.Create(obj)).To(BeNil())
+		Expect(r.UpdateAndFind(obj.ID, &updatedObj, testRepObject{
+			Age: 22,
+		})).To(BeNil())
+		Expect(defaultQueryRunner.RunWithDB(func(db *mgo.Database) error {
+			c := db.C(r.GetCollectionName())
+			objs := make([]testRepObject, 0)
+			Expect(c.Find(nil).All(&objs)).To(BeNil())
+			Expect(objs).To(HaveLen(1))
+			Expect(objs[0].Name).To(Equal("Snake Eyes"))
+			Expect(objs[0].Age).To(Equal(22))
+			return nil
+		})).To(BeNil())
+
+		Expect(updatedObj.ID).To(Equal(obj.ID))
+		Expect(updatedObj.Age).To(Equal(22))
+		Expect(updatedObj.Name).To(Equal("Snake Eyes"))
 	})
 
 	It("should update and find an object", func() {
@@ -171,6 +222,30 @@ var _ = Describe("Update", func() {
 			Name: "Scarlett",
 			Age:  22,
 		})).To(Equal(mgo.ErrNotFound))
+	})
+
+	It("should update an object using no helper (default repository)", func() {
+		r := NewRepository()
+		obj := &testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Snake Eyes",
+			Age:  33,
+		}
+		Expect(r.Create(obj)).To(BeNil())
+		Expect(r.UpdateRaw(obj.ID, map[string]interface{}{
+			"$inc": map[string]interface{}{
+				"age": 1,
+			},
+		})).To(BeNil())
+		Expect(defaultQueryRunner.RunWithDB(func(db *mgo.Database) error {
+			c := db.C(r.GetCollectionName())
+			objs := make([]testRepObject, 0)
+			Expect(c.Find(nil).All(&objs)).To(BeNil())
+			Expect(objs).To(HaveLen(1))
+			Expect(objs[0].Name).To(Equal("Snake Eyes"))
+			Expect(objs[0].Age).To(Equal(34))
+			return nil
+		})).To(BeNil())
 	})
 
 	It("should update an object using no helper", func() {

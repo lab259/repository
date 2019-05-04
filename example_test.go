@@ -23,6 +23,13 @@ type testRepObject struct {
 	Details  []bson.M      `bson:"details,omitempty"`
 }
 
+func NewRepository() *repository.Repository {
+	return repository.NewRepository(repository.RepositoryConfig{
+		Collection:  "collection",
+		QueryRunner: defaultQueryRunner,
+	})
+}
+
 type testRepNoDefaultCriteriaNoDefaultSorting struct {
 }
 

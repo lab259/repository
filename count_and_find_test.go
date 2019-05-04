@@ -11,6 +11,22 @@ var _ = Describe("CountAndFind", func() {
 		Expect(clearSession()).To(BeNil())
 	})
 
+	It("should find all objects (default repository)", func() {
+		r := NewRepository()
+		insertObjects(r)
+		objs := make([]testRepObject, 0)
+		count, err := r.CountAndFindAll(&objs)
+		Expect(err).To(BeNil())
+		Expect(count).To(Equal(3))
+		Expect(objs).To(HaveLen(3))
+		Expect(objs[0].Name).To(Equal("Snake Eyes"))
+		Expect(objs[0].Age).To(Equal(33))
+		Expect(objs[1].Name).To(Equal("Scarlett"))
+		Expect(objs[1].Age).To(Equal(22))
+		Expect(objs[2].Name).To(Equal("Duke"))
+		Expect(objs[2].Age).To(Equal(22))
+	})
+
 	It("should find all objects", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)
