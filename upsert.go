@@ -5,7 +5,7 @@ import (
 )
 
 // Upsert find a single document, if matching update else create.
-func Upsert(r Repository, object interface{}, selector ...interface{}) error {
+func Upsert(r RepositoryProvider, object interface{}, selector ...interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
 		criteria, err := GetQueryCriteria(r.GetDefaultCriteria(), selector...)
 		if err != nil {

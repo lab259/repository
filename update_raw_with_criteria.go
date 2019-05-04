@@ -5,7 +5,7 @@ import (
 )
 
 // UpdateRawWithCriteria does a update of a model based on any selector.
-func UpdateRawWithCriteria(r Repository, object interface{}, selector ...interface{}) error {
+func UpdateRawWithCriteria(r RepositoryProvider, object interface{}, selector ...interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
 		criteria, err := GetQueryCriteria(r.GetDefaultCriteria(), selector...)
 		if err != nil {
