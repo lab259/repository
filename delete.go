@@ -2,7 +2,7 @@ package repository
 
 import "github.com/globalsign/mgo"
 
-func Delete(r Repository, params ...interface{}) error {
+func Delete(r RepositoryProvider, params ...interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
 		c := db.C(r.GetCollectionName())
 		criteria, err := GetQueryCriteria(r.GetDefaultCriteria(), params...)

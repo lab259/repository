@@ -13,6 +13,19 @@ var _ = Describe("Find", func() {
 		Expect(clearSession()).To(BeNil())
 	})
 
+	It("should find an object by name (default repository)", func() {
+		r := NewRepository()
+		tobj := &testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Snake Eyes",
+			Age:  33,
+		}
+		err := r.Create(tobj)
+		Expect(err).To(BeNil())
+		var obj testRepObject
+		Expect(r.Find(&obj, repository.WithCriteria(repository.EQ("name", "Snake Eyes")))).To(BeNil())
+	})
+
 	It("should find an object by name", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		tobj := &testRepObject{

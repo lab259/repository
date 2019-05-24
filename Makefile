@@ -17,6 +17,7 @@ coverage-ci:
 
 coverage-html:
 	@$(GOPATHCMD) go tool cover -html="${COVERAGEFILE}" -o .cover/report.html
+	@xdg-open .cover/report.html 2> /dev/null > /dev/null
 
 dep-add:
 ifdef PACKAGE

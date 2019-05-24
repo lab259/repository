@@ -91,7 +91,7 @@ func GetQueryCriteria(defaultCriteria interface{}, params ...interface{}) (bson.
 	return ccc, nil
 }
 
-func ApplyQueryModifiers(r Repository, query *mgo.Query, params ...interface{}) (*mgo.Query, error) {
+func ApplyQueryModifiers(r RepositoryProvider, query *mgo.Query, params ...interface{}) (*mgo.Query, error) {
 	var sorting = r.GetDefaultSorting()
 	for _, param := range params {
 		switch v := param.(type) {
@@ -104,13 +104,8 @@ func ApplyQueryModifiers(r Repository, query *mgo.Query, params ...interface{}) 
 			// building the conditions to bootstrap the `mgo.Query` object.
 			break
 		case *Sort:
-			// For sorting it has a special case: it will aggregate all sortings
-			// for a late modification.
-			if sorting == nil {
-				sorting = v.Fields
-			} else {
-				sorting = append(sorting, v.Fields...)
-			}
+			// For sorting it has a special case: it will replace the default sorting.
+			sorting = v.Fields
 			break
 		case QueryModifier:
 			// Queryable objects will apply some transformation to the query.
@@ -140,7 +135,7 @@ func ApplyQueryModifiers(r Repository, query *mgo.Query, params ...interface{}) 
 // passed as param.
 //
 // Finally, it will return the `mgo.Query` prepared for execution.
-func Query(r Repository, c *mgo.Collection, params ...interface{}) (*mgo.Query, error) {
+func Query(r RepositoryProvider, c *mgo.Collection, params ...interface{}) (*mgo.Query, error) {
 	conditions, err := GetQueryCriteria(r.GetDefaultCriteria(), params...)
 	if err != nil {
 		return nil, err
@@ -156,7 +151,7 @@ func Query(r Repository, c *mgo.Collection, params ...interface{}) (*mgo.Query, 
 // CountAndQuery will use the same idea as `Query`. However, before applying the
 // modifications from `QueryModifier` it saves the count and returns it with the
 // reference of the `mgo.Query` obtained.
-func CountAndQuery(r Repository, c *mgo.Collection, params ...interface{}) (*mgo.Query, int, error) {
+func CountAndQuery(r RepositoryProvider, c *mgo.Collection, params ...interface{}) (*mgo.Query, int, error) {
 	conditions, err := GetQueryCriteria(r.GetDefaultCriteria(), params...)
 	if err != nil {
 		return nil, 0, err

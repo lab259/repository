@@ -11,6 +11,14 @@ var _ = Describe("Count", func() {
 		Expect(clearSession()).To(BeNil())
 	})
 
+	It("should count all objects (default repository)", func() {
+		r := NewRepository()
+		insertObjects(r)
+		count, err := r.Count()
+		Expect(err).To(BeNil())
+		Expect(count).To(Equal(3))
+	})
+
 	It("should count all objects", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		insertObjects(r)

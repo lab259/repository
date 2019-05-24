@@ -6,7 +6,7 @@ import (
 )
 
 // UpdateAndFind does an update and returns the updated model.
-func UpdateAndFind(r Repository, id interface{}, dst interface{}, object interface{}, params ...interface{}) error {
+func UpdateAndFind(r RepositoryProvider, id interface{}, dst interface{}, object interface{}, params ...interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
 		params = append(params, ByID(id))
 
@@ -26,7 +26,7 @@ func UpdateAndFind(r Repository, id interface{}, dst interface{}, object interfa
 }
 
 // Update does a complete update of a model.
-func Update(r Repository, id interface{}, object interface{}) error {
+func Update(r RepositoryProvider, id interface{}, object interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
 		return db.C(r.GetCollectionName()).Update(bson.D{
 			bson.DocElem{
@@ -39,7 +39,7 @@ func Update(r Repository, id interface{}, object interface{}) error {
 }
 
 // UpdateRaw does a complete update of a model.
-func UpdateRaw(r Repository, id interface{}, object interface{}) error {
+func UpdateRaw(r RepositoryProvider, id interface{}, object interface{}) error {
 	return r.GetQueryRunner().RunWithDB(func(db *mgo.Database) error {
 		return db.C(r.GetCollectionName()).Update(
 			bson.D{

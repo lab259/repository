@@ -12,6 +12,21 @@ var _ = Describe("Delete", func() {
 		Expect(clearSession()).To(BeNil())
 	})
 
+	It("should delete an object (default repository)", func() {
+		r := NewRepository()
+		tobj := &testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Snake Eyes",
+			Age:  33,
+		}
+		err := r.Create(tobj)
+		Expect(err).To(BeNil())
+		Expect(r.Delete(repository.WithCriteria(repository.EQ("name", "Snake Eyes")))).To(BeNil())
+		objs := make([]testRepObject, 0)
+		Expect(r.FindAll(&objs)).To(BeNil())
+		Expect(objs).To(BeEmpty())
+	})
+
 	It("should delete an object", func() {
 		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
 		tobj := &testRepObject{
