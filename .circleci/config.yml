@@ -2,17 +2,15 @@ version: 2
 jobs:
   build:
     docker:
-    - image: circleci/golang:1.9
+      - image: circleci/golang:1.12
+      - image: circleci/mongo:4.0.0
 
-    - image: circleci/mongo:4.0.0
-
-    working_directory: /go/src/github.com/lab259/repository
     steps:
       - checkout
 
       - restore_cache:
           keys:
-            - deps-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
+            - deps-{{ .Branch }}-{{ checksum "go.sum" }}
             - deps-{{ .Branch }}-
             - deps-
 
@@ -21,27 +19,23 @@ jobs:
           command: dockerize -wait tcp://localhost:27017 -timeout 10s
 
       - run:
-          name: Install dep
-          command: curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-      
-      - run:
           name: Install ginkgo
-          command: go get -u github.com/onsi/ginkgo/ginkgo
-      
-      - run:
-          name: Get dependencies
-          command: make dep-ensure
+          command: go get github.com/onsi/ginkgo/ginkgo
 
-      - save_cache:
-            key:  deps-{{ .Branch }}-{{ checksum "Gopkg.lock" }}
-            paths:
-              - vendor
+      - run:
+          name: Download dependencies
+          command: go mod download
 
       - run:
           name: Run tests
           command: |
             make coverage-ci
             bash <(curl -s https://codecov.io/bash)
+
+      - save_cache:
+          key: deps-{{ .Branch }}-{{ checksum "go.sum" }}
+          paths:
+            - /go/pkg/mod
 
       - store_test_results:
           path: test-results

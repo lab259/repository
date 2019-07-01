@@ -2,12 +2,15 @@ package repository_test
 
 import (
 	"log"
+	"os"
+	"path"
 	"testing"
 
 	"github.com/globalsign/mgo"
 	"github.com/jamillosantos/macchiato"
 	"github.com/lab259/repository"
 	"github.com/onsi/ginkgo"
+	"github.com/onsi/ginkgo/reporters"
 	"github.com/onsi/gomega"
 )
 
@@ -40,7 +43,17 @@ func TestRepository(t *testing.T) {
 	log.SetOutput(ginkgo.GinkgoWriter)
 	gomega.RegisterFailHandler(ginkgo.Fail)
 	connect()
-	macchiato.RunSpecs(t, "Repository Test Suite")
+	description := "Repository Test Suite"
+
+	if os.Getenv("CI") == "" {
+		macchiato.RunSpecs(t, description)
+	} else {
+		reporterOutputDir := "./test-results/repository"
+		os.MkdirAll(reporterOutputDir, os.ModePerm)
+		junitReporter := reporters.NewJUnitReporter(path.Join(reporterOutputDir, "results.xml"))
+		macchiatoReporter := macchiato.NewReporter()
+		ginkgo.RunSpecsWithCustomReporters(t, description, []ginkgo.Reporter{macchiatoReporter, junitReporter})
+	}
 }
 
 func clearSession() error {
