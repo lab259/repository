@@ -22,3 +22,4 @@ gin-bin
 *.gin
 .vscode/
 .docker/mongo/backups
+test-results/
