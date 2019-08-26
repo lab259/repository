@@ -50,4 +50,29 @@ var _ = Describe("Create", func() {
 			return nil
 		})).To(BeNil())
 	})
+
+	It("should create multiple objects", func() {
+		r := &testRepNoDefaultCriteriaNoDefaultSorting{}
+		err := repository.Create(r, testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Snake Eyes",
+			Age:  33,
+		}, testRepObject{
+			ID:   bson.NewObjectId(),
+			Name: "Scarlet",
+			Age:  32,
+		})
+		Expect(err).To(BeNil())
+		Expect(defaultQueryRunner.RunWithDB(func(db *mgo.Database) error {
+			c := db.C(r.GetCollectionName())
+			objs := make([]testRepObject, 0)
+			Expect(c.Find(nil).All(&objs)).To(BeNil())
+			Expect(objs).To(HaveLen(2))
+			Expect(objs[0].Name).To(Equal("Snake Eyes"))
+			Expect(objs[0].Age).To(Equal(33))
+			Expect(objs[1].Name).To(Equal("Scarlet"))
+			Expect(objs[1].Age).To(Equal(32))
+			return nil
+		})).To(BeNil())
+	})
 })
